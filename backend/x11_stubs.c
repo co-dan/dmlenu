@@ -10,10 +10,10 @@
 
 static struct x11_ctx* current_x11_ctx = NULL;
 
-value caml_x11_init(value bottom, value monitor)
+value caml_x11_init(value bottom, value monitor, value border)
 {
-  CAMLparam2(bottom, monitor);
-  current_x11_ctx = dml_x11_create(Bool_val(bottom), Int_val(monitor));
+  CAMLparam3(bottom, monitor, border);
+  current_x11_ctx = dml_x11_create(Bool_val(bottom), Int_val(monitor), Int_val(border));
   if(current_x11_ctx) {
     CAMLreturn(Val_true);
   } else {

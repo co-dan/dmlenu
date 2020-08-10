@@ -29,7 +29,7 @@ static void die(const char *fmt, ...)
 }
 
 /* from bemenu */
-void create_window(struct x11_ctx* x11)
+void create_window(struct x11_ctx* x11, uint32_t border)
 {
   assert(x11);
 
@@ -63,7 +63,7 @@ void create_window(struct x11_ctx* x11)
 
   x11->drawable =
     XCreateWindow(dpy, root, 0, 0, x11->width, x11->cur_height,
-                  0, depth, CopyFromParent, x11->visual, valuemask, &wa);
+                  border, depth, CopyFromParent, x11->visual, valuemask, &wa);
   XSelectInput(dpy, x11->drawable, ButtonPressMask | KeyPressMask);
   XMapRaised(dpy, x11->drawable);
   x11->xim = XOpenIM(dpy, NULL, NULL, NULL);
@@ -78,7 +78,7 @@ uint32_t compute_y (struct x11_ctx *x11) {
 }
 
 /* from bemenu */
-void put_window_on_monitor(struct x11_ctx *x11)
+void put_window_on_monitor(struct x11_ctx *x11, uint32_t border)
 {
   Window root = DefaultRootWindow(x11->display);
 
@@ -139,7 +139,10 @@ void put_window_on_monitor(struct x11_ctx *x11)
 #undef INTERSECT
   }
 
-  XMoveResizeWindow(x11->display, x11->drawable, x11->x0, compute_y(x11),
+  x11->width -= border;
+
+  XMoveResizeWindow(x11->display, x11->drawable,
+                    x11->x0, compute_y(x11),
                     x11->width, x11->cur_height);
   XFlush(x11->display);
 }
@@ -160,7 +163,7 @@ static void grab_keyboard(Display* dpy, bool grab)
   }
 }
 
-struct x11_ctx* dml_x11_create(int bottom, uint32_t monitor)
+struct x11_ctx* dml_x11_create(int bottom, uint32_t monitor, uint32_t border)
 {
   struct x11_ctx* x11;
   if(!(x11 = calloc(1, sizeof(struct x11_ctx))))
@@ -169,14 +172,14 @@ struct x11_ctx* dml_x11_create(int bottom, uint32_t monitor)
   if(!(x11->display = XOpenDisplay(NULL)))
     die("Unable to open display\n");
 
-  create_window(x11);
+  create_window(x11, border);
 
   XSetClassHint(x11->display, x11->drawable,
                 (XClassHint[]){{ .res_name = "dmlenu", .res_class = "dmlenu"}});
 
   x11->bottom = bottom;
   x11->monitor = monitor;
-  put_window_on_monitor(x11);
+  put_window_on_monitor(x11, border);
 
   x11->cairo_surface =
     cairo_xlib_surface_create(x11->display, x11->drawable, x11->visual,

@@ -39,9 +39,9 @@ type state = {
   fontdesc: Pango.font_description;
 }
 
-let init ~font ~topbar =
+let init ~font ~topbar ~border =
   let open Backend in
-  let () = X11.init ~topbar () in
+  let () = X11.init ~topbar ~border () in
   let surf = X11.get_cairo_surface () in
   let cairo = Cairo.create surf in
   Cairo.set_antialias cairo Cairo.ANTIALIAS_SUBPIXEL;

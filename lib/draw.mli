@@ -8,7 +8,7 @@ end
 
 type state
 
-val init : font:string -> topbar:bool -> state
+val init : font:string -> topbar:bool -> border:int -> state
 val render : state -> height:int -> (unit -> unit) -> unit
 val terminate : state -> unit
 

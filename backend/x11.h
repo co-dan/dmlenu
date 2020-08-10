@@ -28,7 +28,7 @@ struct x11_ctx {
   uint32_t cur_height;
 };
 
-struct x11_ctx* dml_x11_create(int bottom, uint32_t monitor);
+struct x11_ctx* dml_x11_create(int bottom, uint32_t monitor, uint32_t border);
 void dml_x11_destroy(struct x11_ctx* x11);
 void dml_x11_resize_height(struct x11_ctx* x11, uint32_t height);
 void dml_x11_next_key_event(struct x11_ctx* x11, uint64_t* keysym,

@@ -1,10 +1,12 @@
 (** X operations *)
 
-val init : ?monitor:int -> topbar:bool -> unit -> unit
+val init : ?monitor:int -> ?border:int -> topbar:bool -> unit -> unit
 (** Set up X.
     - [topbar] : true if the window should be at the top
     - [monitor] : id of the monitor where to display the bar.
       (starting from 1). An id of 0 selects the current monitor.
+      Default value: 0.
+    - [border] : border size in pixels.
       Default value: 0.
 *)
 

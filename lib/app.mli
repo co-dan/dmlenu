@@ -14,6 +14,7 @@ type app_state = {
 val run_list : 
   ?topbar: bool
   -> ?separator: string
+  -> ?border: int
   -> ?colors: Ui.Colors.t
   -> ?font: string
   -> ?layout:State.layout
@@ -28,14 +29,16 @@ val run_list :
     - separator: [" "]
     - colors: [Ui.Colors.default]
     - font: ["DejaVu Sans Mono 9"]
-    - lines: [0]
+    - layout: [State.SingleLine]
     - prompt: [""]
+    - border: [0]
     - hook: the identity function
 *)
 
 val run : 
   ?topbar: bool
   -> ?separator: string
+  -> ?border: int
   -> ?colors: Ui.Colors.t
   -> ?font: string
   -> ?layout:State.layout

@@ -1,4 +1,4 @@
-external init : bool -> int -> bool = "caml_x11_init"
+external init : bool -> int -> int -> bool = "caml_x11_init"
 external terminate : unit -> unit = "caml_x11_terminate"
 external resize_height : int -> unit = "caml_x11_resize_height"
 external flush : unit -> unit = "caml_x11_flush"
@@ -7,8 +7,8 @@ external get_width : unit -> int = "caml_x11_get_width"
 external get_height : unit -> int = "caml_x11_get_height"
 external next_key_event : unit -> int * int * Uchar.t = "caml_x11_next_key_event"
 
-let init ?(monitor = 0) ~topbar () =
-  if init (not topbar) monitor then ()
+let init ?(monitor = 0) ?(border=0) ~topbar () =
+  if init (not topbar) monitor border then ()
   else failwith "Error: cannot initialize the X context"
 
 module Key = struct

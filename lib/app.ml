@@ -187,7 +187,8 @@ let utf8_of_uchar u =
      w (0x80 lor (u land 0x3F)));
   Buffer.contents b
 
-let run_list ?(topbar = true) ?(separator = " ") ?(colors = Ui.Colors.default)
+let run_list ?(topbar = true) ?(separator = " ") ?(border = 0)
+      ?(colors = Ui.Colors.default)
       ?(font = "DejaVu Sans Mono 9") ?(layout = State.SingleLine) ?(prompt = "")
       ?(hook = fun x -> x) program
   =
@@ -195,7 +196,7 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = Ui.Colors.default)
     let state = hook state in
     { state with state = State.normalize state.state }
   in
-  let dstate = Draw.init ~font ~topbar in
+  let dstate = Draw.init ~font ~topbar ~border in
   let ui_state = Ui.make dstate in
   let state = {
     colors; prompt; font; topbar; hook; ui_state;
@@ -259,9 +260,9 @@ let run_list ?(topbar = true) ?(separator = " ") ?(colors = Ui.Colors.default)
     Draw.terminate (Ui.dstate ui_state);
     raise e
 
-let run ?topbar ?separator ?colors ?font ?layout ?prompt ?hook program =
+let run ?topbar ?separator ?border ?colors ?font ?layout ?prompt ?hook program =
   match
-    (run_list ?topbar ?separator ?colors ?font ?layout ?prompt ?hook program)
+    (run_list ?topbar ?separator ?border ?colors ?font ?layout ?prompt ?hook program)
   with
   | [] -> None
   | l -> Some (String.concat ~sep:(Option.value ~default:" " separator) l)
