@@ -27,13 +27,23 @@ module Wmctrl = struct
 end
 
 let get_windows prompt =
-  Matching.(set_match_query_fun @@ fuzzy_match ~case:false) ;
+  let () = Matching.(set_match_query_fun (subset ~case:false)) in
+  let () = Ordering.(set_reorder_matched_fun prefixes_first) in
+  let colors = Ui.Colors.({
+    focus_foreground = Draw.Color.of_string_exn "#eaeae8";
+    focus_background = Draw.Color.of_string_exn "#443936";
+    normal_foreground = Draw.Color.of_string_exn "#eaeae8";
+    normal_background = Draw.Color.of_string_exn "#3a201a";
+    match_foreground = Draw.Color.of_string_exn "#e53714";
+    window_background = Draw.Color.of_string_exn "#3a201a";
+  }) in
   let compl = Engine.singleton Wmctrl.windows in
   match App.(run ~prompt
-               ~font:"Monoid 16"
+               ~font:"Latin Modern Mono 17"
                ~topbar:true
-               ~layout:(State.MultiLine 20)
-               ~colors:Ui.Colors.default
+               ~border:10
+               ~layout:(State.MultiLine 25)
+               ~colors:colors
                compl) with
   | None -> Caml.exit 0
   | Some ws -> ws
