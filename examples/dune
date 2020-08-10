@@ -9,6 +9,11 @@
  (libraries dmlenu dmlenu_extra))
 
 (executable
+ (name wmctrl_switch)
+ (modules wmctrl_switch)
+ (libraries dmlenu))
+
+(executable
  (name mpc2D)
  (modules mpc2D)
  (libraries dmlenu dmlenu_extra))
@@ -20,4 +25,4 @@
 
 (alias
  (name examples)
- (deps main.exe i3_workspaces.exe mpc2D.exe with_subcommands.exe))
+ (deps main.exe i3_workspaces.exe wmctrl_switch.exe mpc2D.exe with_subcommands.exe))
