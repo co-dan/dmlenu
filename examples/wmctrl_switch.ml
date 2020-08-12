@@ -34,14 +34,14 @@ let get_windows prompt =
     focus_background = Draw.Color.of_string_exn "#443936";
     normal_foreground = Draw.Color.of_string_exn "#eaeae8";
     normal_background = Draw.Color.of_string_exn "#3a201a";
-    match_foreground = Draw.Color.of_string_exn "#e53714";
+    match_foreground = Draw.Color.of_string_exn "#ee9711";
     window_background = Draw.Color.of_string_exn "#3a201a";
   }) in
   let compl = Engine.singleton Wmctrl.windows in
   match App.(run ~prompt
-               ~font:"Latin Modern Mono 17"
+               ~font:"Source Code Pro 17"
                ~topbar:true
-               ~border:10
+               ~border:5
                ~layout:(State.MultiLine 25)
                ~colors:colors
                compl) with
