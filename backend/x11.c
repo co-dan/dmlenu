@@ -56,7 +56,7 @@ void create_window(struct x11_ctx* x11, uint32_t border)
     depth = vinfo.depth;
     x11->visual = vinfo.visual;
     wa.background_pixmap = None;
-    wa.border_pixel = 0;
+    wa.border_pixel = border;
     wa.colormap = XCreateColormap(dpy, root, x11->visual, AllocNone);
     valuemask = CWOverrideRedirect | CWEventMask | CWBackPixmap | CWColormap | CWBorderPixel;
   }
@@ -139,7 +139,7 @@ void put_window_on_monitor(struct x11_ctx *x11, uint32_t border)
 #undef INTERSECT
   }
 
-  x11->width -= border;
+  x11->width -= 2*border;
 
   XMoveResizeWindow(x11->display, x11->drawable,
                     x11->x0, compute_y(x11),
