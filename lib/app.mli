@@ -5,6 +5,7 @@ type app_state = {
   font: string;
   prompt: string; (** The prompt to the user *)
   topbar: bool;  (** Shall dmlenu sit on the bottom or on the top of the screen? *)
+  border : int;  (** Border around dmlenu *)
   hook: (app_state -> app_state); (** Hook called whenever a token is added *)
   state: State.t; (** The state of the current engine *)
   ui_state: Ui.state; (** Data related to the drawing backend *)

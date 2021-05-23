@@ -7,6 +7,7 @@ type app_state = {
   font: string;
   prompt: string; (** The prompt to the user *)
   topbar: bool;  (** Shall dmlenu sit on the bottom or on the top of the screen? *)
+  border : int;  (** Border around dmlenu *)
   hook: (app_state -> app_state); (** Hook called whenever a token is added *)
   state: State.t; (** The state of the current engine *)
   ui_state: Ui.state; (** Data related to the drawing backend *)
@@ -42,16 +43,17 @@ let draw_horizontal { ui_state; state; colors; _ } =
     Ui.draw_text ~colors ~focus:false ui_state ">"
   )
 
-let rec shorten ui_state candidate s =
+let rec shorten ui_state border candidate s =
   if String.equal s "" ||
-     Ui.text_width ui_state (candidate.display ^ s) <= X11.get_width () - 10 then
+       Ui.text_width ui_state (candidate.display ^ s)
+          <= X11.get_width () - border - 10 then
     s
   else
-    shorten ui_state candidate
+    shorten ui_state border candidate
       (try "..." ^ String.sub s ~pos:10 ~len:(String.length s - 10)
        with _ -> "")
 
-let draw_vertical { ui_state; colors; _ } extra_lines_geometry candidates =
+let draw_vertical { ui_state; colors; border; _ } extra_lines_geometry candidates =
   let candidates_with_geometry =
     Sequence.zip
       (Sequence.of_list extra_lines_geometry)
@@ -64,8 +66,8 @@ let draw_vertical { ui_state; colors; _ } extra_lines_geometry candidates =
     Ui.draw_text_hl ~geometry:line_geom ~focus ~colors
       ui_state candidate.display result;
     if not (String.is_empty candidate.doc) then (
-      let str = shorten ui_state candidate candidate.doc in
-      let x = float @@ X11.get_width () - (Ui.text_width ui_state str) - 10 in
+      let str = shorten ui_state border candidate candidate.doc in
+      let x = float @@ X11.get_width () - (Ui.text_width ui_state str) - border - 10 in
       Ui.set_x ui_state x;
       Ui.draw_text ~geometry:line_geom ~focus ~colors ui_state candidate.doc
     );
@@ -198,7 +200,7 @@ let run_list ?(topbar = true) ?(separator = " ") ?(border = 0)
   let dstate = Draw.init ~font ~topbar ~border in
   let ui_state = Ui.make dstate in
   let state = {
-    colors; prompt; font; topbar; hook; ui_state;
+    colors; prompt; font; topbar; hook; ui_state; border;
     state = State.initial ~layout ~separator ~program ~split:(splith ui_state);
   } in
 
