@@ -14,6 +14,11 @@
  (libraries dmlenu))
 
 (executable
+ (name myexec)
+ (modules myexec)
+ (libraries dmlenu))
+
+(executable
  (name mpc2D)
  (modules mpc2D)
  (libraries dmlenu dmlenu_extra))
